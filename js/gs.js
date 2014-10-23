@@ -14,7 +14,11 @@ define( function( require ){
                 this.layers.collidable = this.map.createLayer('collidable');
                 this.layers.static = this.map.createLayer('static');      
                 
-                this.layers.forEach( function( l ){ l.resizeWorld(); } );
+                Object.keys( this.layers ).forEach( 
+                        function( l ){ 
+                            this.layers[l].resizeWorld(); 
+                        }.bind(this) 
+                );
                 
             }
         }
