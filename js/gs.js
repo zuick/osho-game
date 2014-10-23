@@ -12,7 +12,10 @@ define( function( require ){
 
                 this.layers.background = this.map.createLayer('background');
                 this.layers.collidable = this.map.createLayer('collidable');
-                this.layers.static = this.map.createLayer('static');                
+                this.layers.static = this.map.createLayer('static');      
+                
+                this.layers.forEach( function( l ){ l.resizeWorld(); } );
+                
             }
         }
     }
