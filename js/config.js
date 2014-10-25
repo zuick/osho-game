@@ -7,5 +7,13 @@ define( function(){
         ,map: {
             collidableBlocks: [ 2 ]
         }
+        ,hero: {
+            mainSprite: "hero"
+            ,position: { x: 80, y: 80 }
+            ,linearDamping: 1
+            ,velocity: {
+                run: 200
+            } 
+        }
     }
 })
