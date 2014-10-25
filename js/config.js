@@ -11,6 +11,7 @@ define( function(){
             mainSprite: "hero"
             ,position: { x: 120, y: 80 }
             ,size: { width: 24, height: 24 }
+            ,spriteSize: { width: 32 ,height: 32 }
             ,linearDamping: 1
             ,bounce: 1
             ,velocity: {

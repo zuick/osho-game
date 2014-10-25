@@ -16,6 +16,7 @@ define( function( require ){
         hero.man.body.setSize( config.hero.size.width, config.hero.size.height )
         hero.man.body.bounce.x = config.hero.bounce;;
         hero.man.body.bounce.y = config.hero.bounce;;
+        hero.man.frame = 0;
         
         hero.setVelocity = function( prop, value ){
             hero.group.forEach( function( item ){
@@ -30,12 +31,16 @@ define( function( require ){
             
             if (cursors.up.isDown){
                 this.setVelocity( 'y', -config.hero.velocity.run );
+                hero.man.frame = 2;
             }else if (cursors.down.isDown){
                 this.setVelocity( 'y', config.hero.velocity.run );
+                hero.man.frame = 3;
             }else if(cursors.left.isDown){
                 this.setVelocity( 'x', -config.hero.velocity.run );
+                hero.man.frame = 0;
             }else if (cursors.right.isDown){
                 this.setVelocity( 'x', config.hero.velocity.run );
+                hero.man.frame = 1;
             }
 
         }

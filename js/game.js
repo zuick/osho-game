@@ -7,7 +7,7 @@ define(function( require ){
     function preload() {
         game.load.tilemap('tilemap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/tiles.png');
-        game.load.image('hero', 'assets/hero.png');
+        game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
     }
 
     function create() {
