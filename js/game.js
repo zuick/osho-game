@@ -1,5 +1,6 @@
 define(function( require ){    
-    var config = require('config'); 
+    var config = require('config');
+    
     var game = new Phaser.Game( config.game.width, config.game.height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
     
     var gs = require('gs')( game ); 
@@ -21,8 +22,10 @@ define(function( require ){
     }
 
     function update() {        
-        game.physics.arcade.collide( gs.hero.man, gs.layers.collidable );
-        gs.updateHero();
+        var tickTime = new Date().getTime();
+        
+        gs.hero.updateControls( gs.cursors );
+        gs.hero.updateCollides( gs.layers.static, tickTime );
     }
 
     function render(){
