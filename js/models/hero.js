@@ -12,12 +12,15 @@ define( function( require ){
         
         hero.man.body.linearDamping = config.hero.linearDamping;
         hero.man.body.collideWorldBounds = true;
+        hero.man.anchor.setTo(0.5, 0.5);
+        hero.man.body.setSize( config.hero.size.width, config.hero.size.height )
+        hero.man.body.bounce.x = config.hero.bounce;;
+        hero.man.body.bounce.y = config.hero.bounce;;
         
         hero.setVelocity = function( prop, value ){
-            this.man.body.velocity[prop] = value;
-//            hero.group.forEach( function( item ){
-//                item.body.velocity[prop] = value;
-//            })
+            hero.group.forEach( function( item ){
+                item.body.velocity[prop] = value;
+            })
         }
         
         hero.update = function( game, cursors ){

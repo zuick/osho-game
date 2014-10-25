@@ -5,16 +5,16 @@ define( function( require ){
             map: null
             ,layers: {}
             ,initMap: function(){
-                this.map = game.add.tilemap('tilemap', 25, 25, 32, 32);
+                this.map = game.add.tilemap('tilemap');
                 this.map.addTilesetImage('tiles', 'tiles');
-                this.map.setCollision( 2 );
 
                 this.layers.background = this.map.createLayer('background');
                 this.layers.collidable = this.map.createLayer('collidable');
                 this.layers.static = this.map.createLayer('static');      
                 
-                this.layers.background.resizeWorld();
+                this.layers.collidable.resizeWorld();
 
+                this.map.setCollision( config.map.collidableBlocks, true, this.layers.collidable );
                 
             }
             ,initHero: function(){

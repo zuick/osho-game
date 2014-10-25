@@ -13,18 +13,16 @@ define(function( require ){
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = '#000';      
-        game.world.setBounds(0, 0, this.game.width, this.game.height);
-        
+               
         gs.initKeys();
         gs.initMap();
         gs.initHero();
-        gs.initCameraSettings();              
+        gs.initCameraSettings();
     }
 
-    function update() {
+    function update() {        
         game.physics.arcade.collide( gs.hero.man, gs.layers.collidable );
         gs.updateHero();
-        gs.layers.background.render();
     }
 
     function render(){

@@ -9,10 +9,12 @@ define( function(){
         }
         ,hero: {
             mainSprite: "hero"
-            ,position: { x: 80, y: 80 }
+            ,position: { x: 120, y: 80 }
+            ,size: { width: 24, height: 24 }
             ,linearDamping: 1
+            ,bounce: 1
             ,velocity: {
-                run: 200
+                run: 100
             } 
         }
     }
