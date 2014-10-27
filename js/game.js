@@ -24,11 +24,11 @@ define(function( require ){
     function update() {        
         var tickTime = new Date().getTime();
         
-        gs.hero.updateControls( gs.cursors );
+        gs.hero.updateControls( gs.cursors, gs.keys );
         gs.hero.updateCollides( gs.layers.static, tickTime );
     }
 
     function render(){
-        
+        game.debug.spriteInfo( gs.hero.man )
     }
 });

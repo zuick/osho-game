@@ -4,6 +4,8 @@ define( function( require ){
         return {
             map: null
             ,layers: {}
+            ,keys: {}
+            ,cursors: {}
             ,initMap: function(){
                 this.map = game.add.tilemap('tilemap');
                 this.map.addTilesetImage('tiles', 'tiles');
@@ -17,13 +19,16 @@ define( function( require ){
                 
             }
             ,initHero: function(){
-                this.hero = require('models/hero')( game, config.hero.position.x, config.hero.position.y );                
+                this.hero = require('models/hero')( game, config.hero.position.x, config.hero.position.y, this.map );                
             }
             ,initCameraSettings: function(){
                 game.camera.follow( this.hero.man )
             }
             ,initKeys: function(){
                 this.cursors = game.input.keyboard.createCursorKeys();
+                this.keys = {
+                    space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+                }
             }
         }
     }
