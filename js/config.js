@@ -5,9 +5,12 @@ define( function(){
             ,height: 600
         }
         ,map: {
-            collidableBlocks: [ 2 ]
-            ,runBlocks: [ 3, 4, 5 ]
-            ,flightBlocks: [ 1 ]
+            tileTypes: {
+                collidable: [ 2 ]
+                ,gate: [ 4 ]
+                ,run: [ 3, 5 ]
+                ,flight: [ 1, -1 ]                
+            }
         }
         ,hero: {
             mainSprite: "hero"

@@ -1,5 +1,7 @@
 define( function( require ){
     var config = require('config');
+    var tilesTools = require('tiles-tools');
+    
     return function( game ){
         return {
             map: null
@@ -15,11 +17,11 @@ define( function( require ){
                 
                 this.layers.background.resizeWorld();
 
-                this.map.setCollision( config.map.collidableBlocks, true, this.layers.static );
+                this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 
             }
             ,initHero: function(){
-                this.hero = require('models/hero')( game, config.hero.position.x, config.hero.position.y, this.map );                
+                this.hero = require('models/hero')( game, config.hero.position.x, config.hero.position.y );                
             }
             ,initCameraSettings: function(){
                 game.camera.follow( this.hero.man )
@@ -29,6 +31,9 @@ define( function( require ){
                 this.keys = {
                     space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
                 }
+            }
+            ,getTilesTypesAround: function(){
+                return tilesTools.getTypesAround( this.hero.man.x, this.hero.man.y, this.map, 'static' )
             }
         }
     }

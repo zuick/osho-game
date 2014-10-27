@@ -1,4 +1,6 @@
 define( function( require ){
+    var config = require('config');
+    var tileTypes = config.map.tileTypes;
     
     return {
         getIndexAt: function( tx, ty, map, layer ){
@@ -21,6 +23,26 @@ define( function( require ){
                 ,left: this.getIndexAt( tx - 1, ty, map, layer )
                 ,right: this.getIndexAt( tx + 1, ty, map, layer )
             }
+        }
+        ,getType: function( index ){
+            for( var type in tileTypes){
+                if( tileTypes[type].indexOf(index) !== -1 ){
+                    return type;
+                }
+            }
+            return -1;
+        }
+        /*
+         * x,y in pixels
+         */
+        ,getTypesAround: function( x, y, map, layer ){
+            var indexes = this.getIndexesAround( x, y, map, layer );
+            var types = {}
+            for( var i in indexes ){
+                types[i] = this.getType( indexes[i] );
+            }
+            
+            return types;
         }
     }
 })

@@ -1,8 +1,6 @@
 define( function( require ){
-    return function( game, x, y, map ){
+    return function( game, x, y ){
         var config = require('config').hero;
-        var mapConfig = require('config').map;
-        var tilesTools = require('tiles-tools');
         
         var hero = {};
         
@@ -45,8 +43,7 @@ define( function( require ){
                 }
                 
                 if(keys.space.isDown){
-                    console.log( tilesTools.getIndexesAround( this.man.x, this.man.y, map, 'static' ) )
-                    
+
                 }
             }
             
@@ -54,6 +51,10 @@ define( function( require ){
         
         hero.updateCollides = function( layer, tick ){
             game.physics.arcade.collide( this.man, layer, null, null, this );
+        }
+        
+        hero.updateState = function( tilesAround ){
+            console.log( tilesAround )
         }
         
         hero.setState = function( state ){

@@ -22,10 +22,10 @@ define(function( require ){
     }
 
     function update() {        
-        var tickTime = new Date().getTime();
-        
         gs.hero.updateControls( gs.cursors, gs.keys );
-        gs.hero.updateCollides( gs.layers.static, tickTime );
+        gs.hero.updateCollides( gs.layers.static );
+        gs.hero.updateState( gs.getTilesTypesAround() );
+        
     }
 
     function render(){
