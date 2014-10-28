@@ -28,5 +28,21 @@ define( function(){
                 ,climb: 3
             }
         }
+        ,messages:{
+            height: 50
+            ,bgTile: 'message'
+            ,textStyle: { font: '15pt Courier'
+                        ,fill: '#19cb65'
+                        ,stroke: '#119f4e'
+                        ,strokeThickness: 2
+                        ,xOffset: 180
+                        ,yOffset: 35
+                    }
+            
+            ,animationTime: 1000
+            ,animationType: Phaser.Easing.Linear.None
+            ,alfaMin: 0
+            ,alfaMax: 1  
+        }
     }
 })

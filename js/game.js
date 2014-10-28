@@ -5,9 +5,12 @@ define(function( require ){
     
     var gs = require('gs')( game ); 
     
+    var mesShow = require('utils/showMessage')( game );
+    
     function preload() {
         game.load.tilemap('tilemap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/tiles.png');
+        game.load.image('message', 'assets/message-bg.png');
         game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
     }
 
@@ -19,6 +22,12 @@ define(function( require ){
         gs.initMap();
         gs.initHero();
         gs.initCameraSettings();
+        
+        mesShow.show('monolog1');
+        
+        setTimeout(mesShow.close.bind(mesShow),5000);
+        
+        
     }
 
     function update() {        
