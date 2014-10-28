@@ -8,7 +8,8 @@ define( function(){
             tileTypes: {
                 collidable: [ 2 ]
                 ,gate: [ 4 ]
-                ,run: [ 3, 5 ]
+                ,run: [ 3 ]
+                ,climb: [ 5 ]
                 ,flight: [ 1, -1 ]                
             }
         }
@@ -20,7 +21,9 @@ define( function(){
             ,linearDamping: 1
             ,bounce: 1
             ,velocity: {
-                run: 100
+                1: 100
+                ,2: 125
+                ,3: 60
             }
             ,states: {
                 run: 1

@@ -4,8 +4,7 @@ define(function( require ){
     var game = new Phaser.Game( config.game.width, config.game.height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
     
     var gs = require('gs')( game ); 
-    
-    var mesShow = require('utils/showMessage')( game );
+
     
     function preload() {
         game.load.tilemap('tilemap', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -21,23 +20,19 @@ define(function( require ){
         gs.initKeys();
         gs.initMap();
         gs.initHero();
-        gs.initCameraSettings();
-        
-        mesShow.show('monolog1');
-        
-        setTimeout(mesShow.close.bind(mesShow),5000);
-        
-        
+        gs.initCameraSettings();        
     }
 
     function update() {        
+        gs.hero.updateState( gs.getTilesTypesAround(), gs.keys );
         gs.hero.updateControls( gs.cursors, gs.keys );
         gs.hero.updateCollides( gs.layers.static );
-        gs.hero.updateState( gs.getTilesTypesAround() );
         
     }
 
     function render(){
-        game.debug.spriteInfo( gs.hero.man )
+        game.debug.text( gs.hero.state, 10, 30, "#FF0000")
+        game.debug.text( gs.hero.man.body.velocity.x, 10, 50, "#FF0000")
+        game.debug.text( gs.hero.man.body.velocity.y, 10, 70, "#FF0000")
     }
 });
