@@ -44,5 +44,33 @@ define( function( require ){
             
             return types;
         }
+        
+        ,getSafelyDirections: function( x, y, map, layer ){
+            var tx = Math.ceil( x / map.tileWidth ) - 1;
+            var ty = Math.ceil( y / map.tileHeight ) - 1;
+            
+            var tilesAround = this.getTypesAround( x, y, map, layer );
+            delete tilesAround.center;
+            var d = 0;
+            var safelyDirections = [];
+            
+            for( var i in tilesAround ){
+                if( tilesAround[i] === 'collidable' || tilesAround[i] === 'gate'){
+                    if( i === 'up' ){
+                        d = Math.abs( y - ( ( ty ) * map.tileHeight ) )
+                        if( d + 4 < config.hero.climbingMaxDistance ) safelyDirections.push(i);
+                    }else if( i === 'down' ){
+                        d = Math.abs( y - ( ( ty + 1 ) * map.tileHeight ) )
+                    }else if( i === 'left' ){
+                        d = Math.abs( x - ( ( tx ) * map.tileWidth ) )
+                    }else if( i === 'right' ){
+                        d = Math.abs( x - ( ( tx + 1 ) * map.tileWidth ) )                      
+                    }
+                    
+                }
+            }
+            
+            return safelyDirections;
+        }
     }
 })

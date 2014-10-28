@@ -35,6 +35,9 @@ define( function( require ){
             ,getTilesTypesAround: function(){
                 return tilesTools.getTypesAround( this.hero.man.x, this.hero.man.y, this.map, 'static' )
             }
+            ,getSafelyDirections: function(){
+                return tilesTools.getSafelyDirections( this.hero.man.x, this.hero.man.y, this.map, 'static' )
+            }
         }
     }
 })

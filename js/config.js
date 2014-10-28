@@ -12,6 +12,8 @@ define( function(){
                 ,climb: [ 5 ]
                 ,flight: [ 1, -1 ]                
             }
+            ,tileWidth: 32
+            ,tileHeight: 32
         }
         ,hero: {
             mainSprite: "hero"
@@ -20,6 +22,7 @@ define( function(){
             ,spriteSize: { width: 32 ,height: 32 }
             ,linearDamping: 1
             ,bounce: 1
+            ,climbingMaxDistance: 24
             ,velocity: {
                 1: 100
                 ,2: 125
