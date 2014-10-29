@@ -16,13 +16,42 @@ define( function( require ){
         ,getIndexesAround: function( x, y, map, layer ){
             var tx = Math.ceil( x / map.tileWidth ) - 1;
             var ty = Math.ceil( y / map.tileHeight ) - 1;
-            return {
-                center: this.getIndexAt( tx, ty, map, layer )
-                ,up: this.getIndexAt( tx, ty - 1, map, layer )
-                ,down: this.getIndexAt( tx, ty + 1, map, layer )
-                ,left: this.getIndexAt( tx - 1, ty, map, layer )
-                ,right: this.getIndexAt( tx + 1, ty, map, layer )
+            var dirs = {
+                center: { 
+                    index: this.getIndexAt( tx, ty, map, layer ) 
+                    ,d: 0 }
+                ,up: { 
+                    index: this.getIndexAt( tx, ty - 1, map, layer )
+                    ,d: Math.abs( y - ( ( ty ) * map.tileHeight ) ) }
+                ,down: { 
+                    index: this.getIndexAt( tx, ty + 1, map, layer )
+                    ,d: Math.abs( y - ( ( ty + 1 ) * map.tileHeight ) ) }
+                ,left: { 
+                    index: this.getIndexAt( tx - 1, ty, map, layer )
+                    ,d: Math.abs( x - ( ( tx ) * map.tileWidth ) ) }
+                ,right: { 
+                    index: this.getIndexAt( tx + 1, ty, map, layer )
+                    ,d: Math.abs( x - ( ( tx + 1 ) * map.tileWidth ) ) }
             }
+            
+            dirs.upright = { 
+                    index: this.getIndexAt( tx + 1, ty - 1, map, layer )
+                    ,d: Math.sqrt( dirs.up.d * dirs.up.d + dirs.right.d * dirs.right.d ) 
+                }
+            dirs.upleft = { 
+                    index: this.getIndexAt( tx - 1, ty - 1, map, layer )
+                    ,d: Math.sqrt( dirs.up.d * dirs.up.d + dirs.left.d * dirs.left.d )
+                }
+            dirs.downright = { 
+                    index: this.getIndexAt( tx + 1, ty + 1, map, layer )
+                    ,d: Math.sqrt( dirs.down.d * dirs.down.d + dirs.right.d * dirs.right.d )
+                }
+            dirs.downleft = { 
+                    index: this.getIndexAt( tx - 1, ty + 1, map, layer )
+                    ,d: Math.sqrt( dirs.down.d * dirs.down.d + dirs.left.d * dirs.left.d )
+                }
+            
+            return dirs;
         }
         ,getType: function( index ){
             for( var type in tileTypes){
@@ -39,38 +68,10 @@ define( function( require ){
             var indexes = this.getIndexesAround( x, y, map, layer );
             var types = {}
             for( var i in indexes ){
-                types[i] = this.getType( indexes[i] );
+                types[i] = { type: this.getType( indexes[i].index ), d: indexes[i].d };
             }
             
             return types;
-        }
-        
-        ,getSafelyDirections: function( x, y, map, layer ){
-            var tx = Math.ceil( x / map.tileWidth ) - 1;
-            var ty = Math.ceil( y / map.tileHeight ) - 1;
-            
-            var tilesAround = this.getTypesAround( x, y, map, layer );
-            delete tilesAround.center;
-            var d = 0;
-            var safelyDirections = [];
-            
-            for( var i in tilesAround ){
-                if( tilesAround[i] === 'collidable' || tilesAround[i] === 'gate'){
-                    if( i === 'up' ){
-                        d = Math.abs( y - ( ( ty ) * map.tileHeight ) )
-                        if( d + 4 < config.hero.climbingMaxDistance ) safelyDirections.push(i);
-                    }else if( i === 'down' ){
-                        d = Math.abs( y - ( ( ty + 1 ) * map.tileHeight ) )
-                    }else if( i === 'left' ){
-                        d = Math.abs( x - ( ( tx ) * map.tileWidth ) )
-                    }else if( i === 'right' ){
-                        d = Math.abs( x - ( ( tx + 1 ) * map.tileWidth ) )                      
-                    }
-                    
-                }
-            }
-            
-            return safelyDirections;
         }
     }
 })

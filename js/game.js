@@ -25,8 +25,8 @@ define(function( require ){
 
     function update() {        
         gs.hero.updateState( gs.getTilesTypesAround(), gs.keys );
-        gs.hero.updateControls( gs.cursors, gs.keys );
-        gs.hero.updateCollides( gs.layers.static );
+        gs.hero.updateControls( gs.cursors, gs.keys, gs.getTilesTypesAround.bind(gs) );
+        gs.hero.updateCollides( gs.layers.static, gs.keys );
         
     }
 

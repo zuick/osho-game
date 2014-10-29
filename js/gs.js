@@ -32,12 +32,11 @@ define( function( require ){
                     space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
                 }
             }
-            ,getTilesTypesAround: function(){
-                return tilesTools.getTypesAround( this.hero.man.x, this.hero.man.y, this.map, 'static' )
-            }
-            ,getSafelyDirections: function(){
-                return tilesTools.getSafelyDirections( this.hero.man.x, this.hero.man.y, this.map, 'static' )
-            }
+            ,getTilesTypesAround: function( x, y ){
+                x = x || this.hero.man.x;
+                y = y || this.hero.man.y;
+                return tilesTools.getTypesAround( x, y, this.map, 'static' );
+            }            
         }
     }
 })

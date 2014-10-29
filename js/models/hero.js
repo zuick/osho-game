@@ -16,6 +16,7 @@ define( function( require ){
         hero.man.frame = 0;
         
         hero.state = config.states.run;
+        hero.tilesAround = {};
         
         hero.setVelocity = function( prop, value ){
             hero.group.forEach( function( item ){
@@ -26,7 +27,7 @@ define( function( require ){
         hero.turnTo = function( dir ){
             if( dir === 'up' ){
                 this.man.frame = 2;
-            }else if( dir === 'down'){
+            }else if( dir === 'down' ){
                 this.man.frame = 3;
             }else if( dir === 'left'){
                 this.man.frame = 0;
@@ -36,12 +37,34 @@ define( function( require ){
         }
         
         hero.getTurnToCollidable = function( tilesAround ){
+            var lookTo = [ 'up', 'down', 'left', 'right' ];
             for( var i in tilesAround ){
-                if( tilesAround[i] === 'collidable' || tilesAround[i] === 'gate') return i;
+                if( -1 === lookTo.indexOf( tilesAround[i].type ) && ( tilesAround[i].type === 'collidable' || tilesAround[i].type === 'gate' ) ) return i;
             }
         }
         
-        hero.updateControls = function( cursors, keys ){
+        hero.checkDir = function( dir, tilesAround ){
+            var opposites = {
+                'up': [ 'down', 'downleft', 'downright', 'left', 'right' ]
+                ,'down': [ 'up', 'upleft', 'upright', 'left', 'right' ]
+                ,'left': [ 'right', 'upright', 'downright', 'up', 'down' ]
+                ,'right': [ 'left', 'upleft', 'downleft', 'up', 'down' ]
+            }
+            
+            var collidableTilesDist = opposites[ dir ].filter( function( oppositDir ){
+                return tilesAround[ oppositDir ].type === 'collidable' || tilesAround[ oppositDir ].type === 'gate';
+            }).map( function( oppositDir ){
+                return tilesAround[ oppositDir ].d;
+            })
+            
+            if( collidableTilesDist.length === 0 ) return true;
+            
+            var maxDist = Math.min.apply( Math, collidableTilesDist );
+            return maxDist < config.climbingMaxDistance;
+            
+        }
+        
+        hero.updateControls = function( cursors, keys, tilesAroundChecker ){
             var isRun = this.state === config.states.run;
             var isClimbing = ( this.state === config.states.climb && keys.space.isDown );
             var isGonaFlight = ( this.state !== config.states.run && this.man.body.velocity.x === 0 && this.man.body.velocity.y === 0 );
@@ -54,18 +77,19 @@ define( function( require ){
                 var velocity = config.velocity[config.states.run];
                 if( isGonaFlight ) velocity = config.velocity[config.states.flight];
                 if( isClimbing ) velocity = config.velocity[config.states.climb];
+                var delta = 2;
                 
                 if (cursors.up.isDown){
-                    this.setVelocity( 'y', -velocity );
+                    if( !isClimbing || this.checkDir('up', tilesAroundChecker( this.man.x, this.man.y - delta ) ) ) this.setVelocity( 'y', -velocity );
                     if( this.state !== config.states.climb ) this.turnTo('up')
                 }else if (cursors.down.isDown){
-                    this.setVelocity( 'y', velocity );
+                    if( !isClimbing || this.checkDir('down', tilesAroundChecker( this.man.x, this.man.y + delta ) ) ) this.setVelocity( 'y', velocity );
                     if( this.state !== config.states.climb ) this.turnTo('down')
                 }else if(cursors.left.isDown){
-                    this.setVelocity( 'x', -velocity );
+                    if( !isClimbing || this.checkDir('left', tilesAroundChecker( this.man.x - delta, this.man.y ) ) ) this.setVelocity( 'x', -velocity );
                     if( this.state !== config.states.climb ) this.turnTo('left')
                 }else if (cursors.right.isDown){
-                    this.setVelocity( 'x', velocity );
+                    if( !isClimbing || this.checkDir('right', tilesAroundChecker( this.man.x + delta, this.man.y ) ) ) this.setVelocity( 'x', velocity );
                     if( this.state !== config.states.climb ) this.turnTo('right')
                 }
             }
@@ -76,32 +100,30 @@ define( function( require ){
             game.physics.arcade.collide( this.man, layer, null, null, this );
         }
         
-        hero.updateState = function( tilesAround ){
+        hero.updateState = function( tilesAround, keys ){
             
-            if( tilesAround.center === 'run' || tilesAround.center === 'gate' ){
-                this.setState( config.states.run, tilesAround )
-            }else if( tilesAround.center === 'flight' ){
-                this.setState( config.states.flight, tilesAround )
-            }else if( tilesAround.center === 'climb' ){
-                this.setState( config.states.climb, tilesAround )
+            if( tilesAround.center.type === 'run' || tilesAround.center.type === 'gate' ){
+                this.setState( config.states.run, tilesAround, keys )
+            }else if( tilesAround.center.type === 'flight' ){
+                this.setState( config.states.flight, tilesAround, keys )
+            }else if( tilesAround.center.type === 'climb' ){
+                this.setState( config.states.climb, tilesAround, keys )
             }
         }
         
-        hero.setState = function( state, tilesAround ){
+        hero.setState = function( state, tilesAround, keys ){
             this.state = state;
-
-            if( this.state === config.states.run ){
-                this.man.body.bounce.x = 0;
-                this.man.body.bounce.y = 0;
-            }else if( this.state === config.states.flight ){
+            this.tilesAround = tilesAround;
+            
+            this.man.body.bounce.x = 0;
+            this.man.body.bounce.y = 0;
+            
+            if( this.state === config.states.flight || ( this.state === config.states.climb && !keys.space.isDown ) ){
                 this.man.body.bounce.x = config.bounce;
-                this.man.body.bounce.y = config.bounce;
-            }else if( this.state === config.states.climb ){
-                this.man.body.bounce.x = config.bounce;
-                this.man.body.bounce.y = config.bounce;
-                
-                this.turnTo( this.getTurnToCollidable( tilesAround ) )
-            }         
+                this.man.body.bounce.y = config.bounce;            
+            }
+            
+            this.turnTo( this.getTurnToCollidable( tilesAround ) )
         }
            
         
