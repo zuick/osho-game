@@ -1,6 +1,6 @@
 define( function( require ){
     var config = require('config');
-    var tilesTools = require('tiles-tools');
+    var tilesTools = require('utils/tiles-tools');
     
     return function( game ){
         return {
