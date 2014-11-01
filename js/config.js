@@ -39,19 +39,23 @@ define( function(){
                 ,climb: 3
             }
         }
+        ,hint:{
+            sprite: "hint"
+        }
         ,messages:{
-            height: 50
+            height: 60
             ,bgTile: 'message'
-            ,textStyle: { font: '15pt Courier'
+            ,textStyle: { font: '12pt Verdana'
                         ,fill: '#19cb65'
-                        ,stroke: '#119f4e'
-                        ,strokeThickness: 2
-                        ,xOffset: 180
-                        ,yOffset: 35
+                        ,stroke: '#000'
+                        ,strokeThickness: 0
+                        ,xOffset: 20
+                        ,yOffset: 10
                     }
             
-            ,animationTime: 1000
+            ,animationTime: 300
             ,animationType: Phaser.Easing.Linear.None
+            ,autoCloseTime: 2000
             ,alfaMin: 0
             ,alfaMax: 1  
         }

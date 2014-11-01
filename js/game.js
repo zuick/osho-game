@@ -11,6 +11,7 @@ define(function( require ){
         game.load.image('tiles', 'assets/tiles.png');
         game.load.image('message', 'assets/message-bg.png');
         game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
+        game.load.image('hint', 'assets/hint.png');
     }
 
     function create() {
@@ -19,6 +20,7 @@ define(function( require ){
                
         gs.initKeys();
         gs.initMap();
+        gs.initHints();
         gs.initHero();
         gs.initCameraSettings();        
     }
