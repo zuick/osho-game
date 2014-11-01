@@ -24,7 +24,7 @@ define( function( require ){
             })
         }
         
-        hero.turnTo = function( dir ){
+        hero.setTurn = function( dir ){
             if( dir === 'up' ){
                 this.man.frame = 2;
             }else if( dir === 'down' ){
@@ -36,14 +36,14 @@ define( function( require ){
             }
         }
         
-        hero.getTurnToCollidable = function( tilesAround ){
+        hero.getTurnFromTilesAround = function( tilesAround, types ){
             var lookTo = [ 'up', 'down', 'left', 'right' ];
             for( var i in tilesAround ){
-                if( -1 === lookTo.indexOf( tilesAround[i].type ) && ( tilesAround[i].type === 'collidable' || tilesAround[i].type === 'gate' ) ) return i;
+                if( -1 === lookTo.indexOf( tilesAround[i].type ) && types.indexOf( tilesAround[i].type ) !== -1 ) return i;
             }
         }
         
-        hero.checkDir = function( dir, tilesAround ){
+        hero.canGoTo = function( dir, tilesAround ){
             var opposites = {
                 'up': [ 'down', 'downleft', 'downright', 'left', 'right' ]
                 ,'down': [ 'up', 'upleft', 'upright', 'left', 'right' ]
@@ -52,81 +52,103 @@ define( function( require ){
             }
             
             var collidableTilesDist = opposites[ dir ].filter( function( oppositDir ){
+                // return only collidable or gate
                 return tilesAround[ oppositDir ].type === 'collidable' || tilesAround[ oppositDir ].type === 'gate';
             }).map( function( oppositDir ){
-                return tilesAround[ oppositDir ].d;
+                // return objects with dir and distance
+                return { dir: oppositDir, d: tilesAround[ oppositDir ].d };
             })
             
-            if( collidableTilesDist.length === 0 ) return true;
+            if( collidableTilesDist.length === 0 ){
+                return true;
+            }
+            
+            if( collidableTilesDist.length === 1 && ['downleft', 'downright', 'upleft', 'upright'].indexOf( collidableTilesDist[0].dir ) !== -1  ) { // corner case
+                 collidableTilesDist[0].d = tilesAround[ opposites[dir][0] ].d;
+            }
+                        
+            collidableTilesDist = collidableTilesDist.map( function( obj ){
+                return obj.d;
+            })
             
             var maxDist = Math.min.apply( Math, collidableTilesDist );
             return maxDist < config.climbingMaxDistance;
-            
         }
         
-        hero.updateControls = function( cursors, keys, tilesAroundChecker ){
-            var isRun = this.state === config.states.run;
-            var isClimbing = ( this.state === config.states.climb && keys.space.isDown );
-            var isGonaFlight = ( this.state !== config.states.run && this.man.body.velocity.x === 0 && this.man.body.velocity.y === 0 );
-            
-            if( isRun || isClimbing || isGonaFlight ) {
+        hero.updateVelocity = function( state, cursors, keys, tilesAroundChecker ){
+            if( state.isRunning || state.isClimbing || state.isGonaFlight ) {
                 
                 this.setVelocity( 'x', 0 );
                 this.setVelocity( 'y', 0 );
                 
                 var velocity = config.velocity[config.states.run];
-                if( isGonaFlight ) velocity = config.velocity[config.states.flight];
-                if( isClimbing ) velocity = config.velocity[config.states.climb];
-                var delta = 2;
+                if( state.isGonaFlight ) velocity = config.velocity[config.states.flight];
+                if( state.isClimbing ) velocity = config.velocity[config.states.climb];
+                
+                var delta = config.stepLength;
                 
                 if (cursors.up.isDown){
-                    if( !isClimbing || this.checkDir('up', tilesAroundChecker( this.man.x, this.man.y - delta ) ) ) this.setVelocity( 'y', -velocity );
-                    if( this.state !== config.states.climb ) this.turnTo('up')
+                    if( !state.isClimbing || this.canGoTo('up', tilesAroundChecker( this.man.x, this.man.y - delta ) ) ) this.setVelocity( 'y', -velocity );
+                    
                 }else if (cursors.down.isDown){
-                    if( !isClimbing || this.checkDir('down', tilesAroundChecker( this.man.x, this.man.y + delta ) ) ) this.setVelocity( 'y', velocity );
-                    if( this.state !== config.states.climb ) this.turnTo('down')
+                    if( !state.isClimbing || this.canGoTo('down', tilesAroundChecker( this.man.x, this.man.y + delta ) ) ) this.setVelocity( 'y', velocity );
+                    
                 }else if(cursors.left.isDown){
-                    if( !isClimbing || this.checkDir('left', tilesAroundChecker( this.man.x - delta, this.man.y ) ) ) this.setVelocity( 'x', -velocity );
-                    if( this.state !== config.states.climb ) this.turnTo('left')
+                    if( !state.isClimbing || this.canGoTo('left', tilesAroundChecker( this.man.x - delta, this.man.y ) ) ) this.setVelocity( 'x', -velocity );
+                    
                 }else if (cursors.right.isDown){
-                    if( !isClimbing || this.checkDir('right', tilesAroundChecker( this.man.x + delta, this.man.y ) ) ) this.setVelocity( 'x', velocity );
-                    if( this.state !== config.states.climb ) this.turnTo('right')
+                    if( !state.isClimbing || this.canGoTo('right', tilesAroundChecker( this.man.x + delta, this.man.y ) ) ) this.setVelocity( 'x', velocity );
+                    
                 }
             }
-            
         }
         
-        hero.updateCollides = function( layer, tick ){
-            game.physics.arcade.collide( this.man, layer, null, null, this );
-        }
-        
-        hero.updateState = function( tilesAround, keys ){
-            
-            if( tilesAround.center.type === 'run' || tilesAround.center.type === 'gate' ){
-                this.setState( config.states.run, tilesAround, keys )
-            }else if( tilesAround.center.type === 'flight' ){
-                this.setState( config.states.flight, tilesAround, keys )
-            }else if( tilesAround.center.type === 'climb' ){
-                this.setState( config.states.climb, tilesAround, keys )
-            }
-        }
-        
-        hero.setState = function( state, tilesAround, keys ){
-            this.state = state;
-            this.tilesAround = tilesAround;
-            
-            this.man.body.bounce.x = 0;
-            this.man.body.bounce.y = 0;
-            
-            if( this.state === config.states.flight || ( this.state === config.states.climb && !keys.space.isDown ) ){
+        hero.updateProperties = function( state ){            
+            if( state.isFlying || state.isGonaClimbing ){
                 this.man.body.bounce.x = config.bounce;
                 this.man.body.bounce.y = config.bounce;            
+            }else{
+                this.man.body.bounce.x = 0;
+                this.man.body.bounce.y = 0;                
+            }
+        }
+        
+        hero.updateTurn = function( state, tilesAround, cursors ){
+            if( state.isClimbing ){
+                this.setTurn( this.getTurnFromTilesAround( tilesAround, [ 'collidable', 'gate' ] ) )
+            }else{
+                if (cursors.up.isDown){
+                    this.setTurn('up')
+                    
+                }else if (cursors.down.isDown){
+                    this.setTurn('down')
+                    
+                }else if(cursors.left.isDown){
+                    this.setTurn('left')
+                    
+                }else if (cursors.right.isDown){
+                    this.setTurn('right')
+                }
+            }
+        }
+        
+        hero.update = function( cursors, keys, tilesAroundChecker ){
+            var tilesAround = tilesAroundChecker();
+            
+            var state = {
+                isRunning: tilesAround.center.type === 'run' || tilesAround.center.type === 'gate',
+                isClimbing: tilesAround.center.type === 'climb' && keys.space.isDown,
+                isFlying: tilesAround.center.type === 'flight',
+                isGonaClimbing: tilesAround.center.type === 'climb' && !keys.space.isDown,
             }
             
-            this.turnTo( this.getTurnToCollidable( tilesAround ) )
+            state.isGonaFlight = !state.isRun && this.man.body.velocity.x === 0 && this.man.body.velocity.y === 0;   
+            state.isBouncy = tilesAround.center.type === 'flight' || state.isGonaClimbing;             
+            
+            this.updateVelocity( state, cursors, keys, tilesAroundChecker );
+            this.updateProperties( state );
+            this.updateTurn( state, tilesAround, cursors );
         }
-           
-        
         return hero;
         
     }

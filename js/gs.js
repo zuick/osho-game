@@ -36,7 +36,10 @@ define( function( require ){
                 x = x || this.hero.man.x;
                 y = y || this.hero.man.y;
                 return tilesTools.getTypesAround( x, y, this.map, 'static' );
-            }            
+            }        
+            ,updateCollides: function(){
+                game.physics.arcade.collide( this.hero.man, this.layers.static );
+            }
         }
     }
 })

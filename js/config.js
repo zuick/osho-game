@@ -23,6 +23,7 @@ define( function(){
             ,linearDamping: 1
             ,bounce: 1
             ,climbingMaxDistance: 24
+            ,stepLength: 2
             ,velocity: {
                 1: 100
                 ,2: 125
