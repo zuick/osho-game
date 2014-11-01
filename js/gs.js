@@ -19,6 +19,8 @@ define( function( require ){
                 this.layers.static = this.map.createLayer('static');                      
                 
                 this.layers.background.resizeWorld();
+                this.layers.background.scrollFactorX = 0.5;
+                this.layers.background.scrollFactory = 0.5;
 
                 this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 

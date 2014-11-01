@@ -22,7 +22,7 @@ define( function(){
             ,spriteSize: { width: 32 ,height: 32 }
             ,linearDamping: 1
             ,bounce: 1
-            ,climbingMaxDistance: 24
+            ,climbingMaxDistance: 16
             ,stepLength: 2
             ,airMax: 100
             ,airUpdateFrequency: 100
@@ -30,7 +30,7 @@ define( function(){
             ,airConsumptionSpeed: 15
             ,velocity: {
                 1: 100
-                ,2: 125
+                ,2: 135
                 ,3: 60
             }
             ,states: {

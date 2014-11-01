@@ -44,13 +44,15 @@ define( function( require ){
             }
         }
         
-        hero.canGoTo = function( dir, tilesAround ){
+        hero.canGoTo = function( dir, tilesAround, reverse ){
             var opposites = {
                 'up': [ 'down', 'downleft', 'downright', 'left', 'right' ]
                 ,'down': [ 'up', 'upleft', 'upright', 'left', 'right' ]
                 ,'left': [ 'right', 'upright', 'downright', 'up', 'down' ]
                 ,'right': [ 'left', 'upleft', 'downleft', 'up', 'down' ]
             }
+            
+            if( reverse ) dir = opposites[dir][0];
             
             var collidableTilesDist = opposites[ dir ].filter( function( oppositDir ){
                 // return only collidable or gate
@@ -90,16 +92,16 @@ define( function( require ){
                 
                 if (cursors.up.isDown){
                     if( !state.isClimbing || this.canGoTo('up', tilesAroundChecker( this.man.x, this.man.y - delta ) ) ) this.setVelocity( 'y', -velocity );
-                    
+
                 }else if (cursors.down.isDown){
                     if( !state.isClimbing || this.canGoTo('down', tilesAroundChecker( this.man.x, this.man.y + delta ) ) ) this.setVelocity( 'y', velocity );
-                    
+
                 }else if(cursors.left.isDown){
                     if( !state.isClimbing || this.canGoTo('left', tilesAroundChecker( this.man.x - delta, this.man.y ) ) ) this.setVelocity( 'x', -velocity );
-                    
+
                 }else if (cursors.right.isDown){
                     if( !state.isClimbing || this.canGoTo('right', tilesAroundChecker( this.man.x + delta, this.man.y ) ) ) this.setVelocity( 'x', velocity );
-                    
+
                 }
             }
         }
@@ -112,6 +114,26 @@ define( function( require ){
                 this.man.body.bounce.x = 0;
                 this.man.body.bounce.y = 0;                
             }
+        }
+        
+        hero.getTurnFromVelocity = function(){
+            var v = this.man.body.velocity;
+            
+            if( v.x === 0 && v.y < 0 ){
+                this.dir = 'up'
+                return this.dir;
+            }else if(v.x === 0 && v.y > 0){
+                this.dir = 'down'
+                return this.dir;
+            }else if(v.x < 0 && v.y === 0){
+                this.dir = 'left'
+                return this.dir;
+            }else if(v.x > 0 && v.y === 0){
+                this.dir = 'right'
+                return this.dir;
+            }
+            
+            return this.dir;
         }
         
         hero.updateTurn = function( state, tilesAround, cursors ){
@@ -146,12 +168,12 @@ define( function( require ){
             
             var state = {
                 isRunning: tilesAround.center.type === 'run' || tilesAround.center.type === 'gate',
-                isClimbing: tilesAround.center.type === 'climb' && keys.space.isDown,
+                isClimbing: tilesAround.center.type === 'climb' && keys.space.isDown && this.canGoTo( this.getTurnFromVelocity(), tilesAround, true ),
                 isFlying: tilesAround.center.type === 'flight',
                 isGonaClimbing: tilesAround.center.type === 'climb' && !keys.space.isDown,
             }
             
-            state.isGonaFlight = !state.isRun && this.man.body.velocity.x === 0 && this.man.body.velocity.y === 0;   
+            state.isGonaFlight = !state.isRun && this.man.body.velocity.x === 0 && this.man.body.velocity.y === 0 && !keys.space.isDown;   
             state.isBouncy = tilesAround.center.type === 'flight' || state.isGonaClimbing;             
             
             this.updateVelocity( state, cursors, keys, tilesAroundChecker );
