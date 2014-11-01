@@ -1,6 +1,8 @@
 define( function( require ){
+    var config = require('config').hero;
+    var AirContainer = require('models/air-container');
+    
     return function( game, x, y ){
-        var config = require('config').hero;
         
         var hero = {};
         
@@ -15,8 +17,7 @@ define( function( require ){
         
         hero.man.frame = 0;
         
-        hero.state = config.states.run;
-        hero.tilesAround = {};
+        hero.airContainer = new AirContainer( game, config.airMax );
         
         hero.setVelocity = function( prop, value ){
             hero.group.forEach( function( item ){
@@ -132,6 +133,14 @@ define( function( require ){
             }
         }
         
+        hero.updateAirContainer = function( state ){
+            if( state.isRunning ){
+                this.airContainer.startFilling();                
+            }else{
+                this.airContainer.startUsing();                 
+            }
+        }
+        
         hero.update = function( cursors, keys, tilesAroundChecker ){
             var tilesAround = tilesAroundChecker();
             
@@ -148,6 +157,7 @@ define( function( require ){
             this.updateVelocity( state, cursors, keys, tilesAroundChecker );
             this.updateProperties( state );
             this.updateTurn( state, tilesAround, cursors );
+            this.updateAirContainer( state );
         }
         return hero;
         

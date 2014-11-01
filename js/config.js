@@ -14,7 +14,7 @@ define( function(){
             }
             ,tileWidth: 32
             ,tileHeight: 32
-        }
+        }        
         ,hero: {
             mainSprite: "hero"
             ,position: { x: 180, y: 320 }
@@ -24,6 +24,10 @@ define( function(){
             ,bounce: 1
             ,climbingMaxDistance: 24
             ,stepLength: 2
+            ,airMax: 100
+            ,airUpdateFrequency: 100
+            ,airRecoverySpeed: 100
+            ,airConsumptionSpeed: 15
             ,velocity: {
                 1: 100
                 ,2: 125

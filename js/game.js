@@ -29,5 +29,7 @@ define(function( require ){
         
     }
 
-    function render(){}
+    function render(){
+        game.debug.text( gs.hero.airContainer.ammount, 10, 30, "#00AA00")
+    }
 });
