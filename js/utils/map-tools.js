@@ -73,5 +73,23 @@ define( function( require ){
             
             return types;
         }
+        ,getObjects: function ( map, layerName, type ){
+            var result = [];
+            // find layer
+            for( var i in map.layers ){
+                var layer = map.layers[i];
+                if( layer.name == layerName ){
+                    // find objects
+                    for( var j in layer.objects ){
+                        if( layer.objects[j].type === type ){
+                            result.push( layer.objects[j] );
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return result;
+        },
     }
 })

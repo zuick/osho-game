@@ -41,6 +41,21 @@
                  "width":0,
                  "x":560,
                  "y":355
+                }, 
+                {
+                 "gid":7,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+                     "text":"Hello"
+                    },
+                 "rotation":0,
+                 "type":"checkpoint",
+                 "visible":true,
+                 "width":0,
+                 "x":193,
+                 "y":405
                 }],
          "opacity":1,
          "type":"objectgroup",
