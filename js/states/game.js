@@ -12,6 +12,7 @@ define( function( require ){
                 gs.initKeys();
                 gs.initMap();
                 gs.initHints();
+                gs.initCheckpoints();
                 gs.initHero();
                 gs.initCameraSettings();        
             }

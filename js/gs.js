@@ -2,6 +2,8 @@ define( function( require ){
     var config = require('config');
     var mapTools = require('utils/map-tools');
     var createHint = require('models/hint');    
+    var createCheckpoint = require('models/checkpoint');    
+    var gameSaver = require('utils/game-saver');
     
     return function( game ){
         return {
@@ -11,6 +13,8 @@ define( function( require ){
             ,cursors: {}
             ,hints: null
             ,messager: null
+            ,lastCheckpoint: 0
+            ,checkpoints: null
             ,initMap: function(){
                 this.map = game.add.tilemap('tilemap');
                 this.map.addTilesetImage('tiles', 'tiles');
@@ -26,10 +30,16 @@ define( function( require ){
                 
             }
             ,initHero: function(){
-                var heroOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'hero');
+                var state = gameSaver.load();
+                
+                var heroOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'checkpoint');
 
-                if( heroOptions[0] ){
-                    this.hero = require('models/hero')( game, heroOptions[0].x, heroOptions[0].y );                                  
+                if( heroOptions[ state.checkpoint ] ){
+                    this.lastCheckpoint = state.checkpoint;
+                    this.hero = require('models/hero')( 
+                            game
+                            ,heroOptions[state.checkpoint].x + config.hero.size.width / 2
+                            ,heroOptions[state.checkpoint].y - config.hero.size.height / 2 );                                  
                 }
             }
             ,initHints: function(){
@@ -42,6 +52,18 @@ define( function( require ){
                             ,hintsOptions[i].x
                             ,hintsOptions[i].y - this.map.tileHeight
                             ,hintsOptions[i].properties.key ) 
+                        );
+                }                
+            }
+            ,initCheckpoints: function(){
+                this.checkpoints = game.add.group();
+                var cpOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'checkpoint');
+                for( var i in cpOptions ){
+                    this.checkpoints.add( createCheckpoint( 
+                            game
+                            ,cpOptions[i].x
+                            ,cpOptions[i].y - this.map.tileHeight
+                            ,i)                            
                         );
                 }
                 
@@ -63,7 +85,17 @@ define( function( require ){
             ,updateCollides: function(){
                 game.physics.arcade.collide( this.hero.man, this.layers.static );
                 
-                this.processHintCollision();                
+                this.processHintCollision();   
+                this.processCheckpointCollision()
+            }
+            ,processCheckpointCollision: function(){
+                this.checkpoints.forEach( function( cp ){
+                   if( this.lastCheckpoint !== cp.cpIndex && cp.body.hitTest( this.hero.man.x, this.hero.man.y ) ){
+                        cp.activate();
+                        gameSaver.save( cp.cpIndex );
+                        this.lastCheckpoint = cp.cpIndex;
+                   }
+                }.bind(this))
             }
             ,processHintCollision: function( man, hint ){
                 var nohits = true;

@@ -7,6 +7,9 @@ define( function(){
         ,boot: {
             textStyle: { font: "14pt Verdana", fill: "#FFF" }
         }
+        ,checkpoint: {
+            sprite: 'checkpoint'
+        }
         ,bumper:{
             animationTime: 500
             ,animationType: Phaser.Easing.Linear.None

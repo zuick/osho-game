@@ -10,10 +10,11 @@ define( function( require ){
             game.load.image('message', 'assets/message-bg.png');
             game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
             game.load.image('hint', 'assets/hint.png');
+            game.load.image('checkpoint', 'assets/terminal.png');
             game.load.image('logo', 'assets/gaminator-logo.png');
         } 
         this.create = function(){
-            game.state.start( 'bumper' );
+            game.state.start( 'game' );
         }            
     }
 })
