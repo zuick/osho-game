@@ -1,6 +1,7 @@
 define( function(){
     return {
-        game: {
+        debug: true
+        ,game: {
             width: 800
             ,height: 600
         }
@@ -19,6 +20,13 @@ define( function(){
             animationTime: 1000
             ,animationType: Phaser.Easing.Linear.None
             ,sprite: "fader-bg"
+        }
+        ,stateBar:{
+            bgHeight: 40
+            ,airBgPadding: 10
+            ,bgSprite: "message"
+            ,airBgSprite: "bar-air-bg"            
+            ,airLeftBgSprite: "bar-air-left-bg"            
         }
         ,map: {
             tileTypes: {

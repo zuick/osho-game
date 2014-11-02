@@ -3,6 +3,7 @@ define( function( require ){
     var mapTools = require('utils/map-tools');
     var createHint = require('models/hint');    
     var createCheckpoint = require('models/checkpoint');    
+    var createStateBar = require('models/state-bar');
     var gameSaver = require('utils/game-saver');    
     
     return function( game ){
@@ -19,6 +20,9 @@ define( function( require ){
             ,initFader: function(){
                 this.fader = require('utils/fader')( game );
                 this.fader.init();
+            }
+            ,initStateBar: function(){
+                this.stateBar = createStateBar( game );
             }
             ,initMap: function(){
                 this.map = game.add.tilemap('tilemap');
@@ -92,6 +96,9 @@ define( function( require ){
                 
                 this.processHintCollision();   
                 this.processCheckpointCollision()
+            }
+            ,updateStateBar: function(){
+                this.stateBar.updateAirLeft( this.hero.airContainer );
             }
             ,processCheckpointCollision: function(){
                 this.checkpoints.forEach( function( cp ){

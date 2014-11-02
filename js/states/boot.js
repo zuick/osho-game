@@ -9,13 +9,16 @@ define( function( require ){
             game.load.image('tiles', 'assets/tiles.png');
             game.load.image('message', 'assets/message-bg.png');
             game.load.image('fader-bg', 'assets/fader-bg.png');
+            game.load.image('bar-air-bg', 'assets/bar-air-bg.png');
+            game.load.image('bar-air-left-bg', 'assets/bar-air-left-bg.png');
             game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
             game.load.image('hint', 'assets/hint.png');
             game.load.image('checkpoint', 'assets/terminal.png');
             game.load.image('logo', 'assets/gaminator-logo.png');
         } 
         this.create = function(){
-            game.state.start( 'bumper' );
+            if( config.debug ) game.state.start( 'game' );
+            else game.state.start( 'bumper' );
         }            
     }
 })
