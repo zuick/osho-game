@@ -1,8 +1,16 @@
 define( function(){
     return {
         game: {
-            width: 600
+            width: 800
             ,height: 600
+        }
+        ,boot: {
+            textStyle: { font: "14pt Verdana", fill: "#FFF" }
+        }
+        ,bumper:{
+            animationTime: 500
+            ,animationType: Phaser.Easing.Linear.None
+            ,showTime: 3000
         }
         ,map: {
             tileTypes: {
