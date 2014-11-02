@@ -10,8 +10,7 @@ define( function( require ){
         hero.man = hero.group.create( x, y, config.mainSprite );        
         
         game.physics.enable( hero.man );        
-        hero.man.body.linearDamping = config.linearDamping;
-        hero.man.body.collideWorldBounds = true;
+        hero.man.body.linearDamping = config.linearDamping;        
         hero.man.anchor.setTo(0.5, 0.5);
         hero.man.body.setSize( config.size.width, config.size.height )
         
@@ -22,6 +21,13 @@ define( function( require ){
         hero.setVelocity = function( prop, value ){
             hero.group.forEach( function( item ){
                 item.body.velocity[prop] = value;
+            })
+        }
+        
+        hero.moveTo = function( x, y ){
+            hero.group.forEach( function( item ){
+                item.x = x;
+                item.y = y;
             })
         }
         

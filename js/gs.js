@@ -38,6 +38,19 @@ define( function( require ){
                 this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 
             }
+            ,resetFromLastCheckpoint: function(){
+                var state = gameSaver.load();
+                
+                var heroOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'checkpoint');
+
+                if( heroOptions[ state.checkpoint ] ){
+                    this.lastCheckpoint = state.checkpoint;
+                    var x = heroOptions[state.checkpoint].x + config.hero.size.width / 2;
+                    var y = heroOptions[state.checkpoint].y - config.hero.size.height / 2;
+                    
+                    this.hero.moveTo( x, y );                                 
+                }
+            }
             ,initHero: function(){
                 var state = gameSaver.load();
                 
@@ -45,10 +58,9 @@ define( function( require ){
 
                 if( heroOptions[ state.checkpoint ] ){
                     this.lastCheckpoint = state.checkpoint;
-                    this.hero = require('models/hero')( 
-                            game
-                            ,heroOptions[state.checkpoint].x + config.hero.size.width / 2
-                            ,heroOptions[state.checkpoint].y - config.hero.size.height / 2 );                                  
+                    var x = heroOptions[state.checkpoint].x + config.hero.size.width / 2;
+                    var y = heroOptions[state.checkpoint].y - config.hero.size.height / 2;
+                    this.hero = require('models/hero')( game, x, y );                                  
                 }
             }
             ,initHints: function(){
@@ -99,6 +111,11 @@ define( function( require ){
             }
             ,updateStateBar: function(){
                 this.stateBar.updateAirLeft( this.hero.airContainer );
+            }
+            ,checkZeroAirCase: function(){
+                if( this.hero.airContainer.ammount <= 0 ){
+                    this.resetFromLastCheckpoint();
+                }
             }
             ,processCheckpointCollision: function(){
                 this.checkpoints.forEach( function( cp ){

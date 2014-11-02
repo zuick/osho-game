@@ -11,12 +11,13 @@ define( function( require ){
             gs.initMap();
             gs.initHints();
             gs.initCheckpoints();
-            gs.initStateBar();
             gs.initHero();            
+            gs.initStateBar();
             gs.initCameraSettings();            
         }
 
         this.update = function() {
+            gs.checkZeroAirCase();
             gs.hero.update( gs.cursors, gs.keys, gs.getTilesTypesAround.bind(gs) );
             gs.updateCollides();
             gs.updateStateBar();
