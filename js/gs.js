@@ -3,7 +3,7 @@ define( function( require ){
     var mapTools = require('utils/map-tools');
     var createHint = require('models/hint');    
     var createCheckpoint = require('models/checkpoint');    
-    var gameSaver = require('utils/game-saver');
+    var gameSaver = require('utils/game-saver');    
     
     return function( game ){
         return {
@@ -15,6 +15,11 @@ define( function( require ){
             ,messager: null
             ,lastCheckpoint: 0
             ,checkpoints: null
+            ,fader: null
+            ,initFader: function(){
+                this.fader = require('utils/fader')( game );
+                this.fader.init();
+            }
             ,initMap: function(){
                 this.map = game.add.tilemap('tilemap');
                 this.map.addTilesetImage('tiles', 'tiles');

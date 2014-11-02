@@ -15,6 +15,11 @@ define( function(){
             ,animationType: Phaser.Easing.Linear.None
             ,showTime: 3000
         }
+        ,fader: {
+            animationTime: 1000
+            ,animationType: Phaser.Easing.Linear.None
+            ,sprite: "fader-bg"
+        }
         ,map: {
             tileTypes: {
                 collidable: [ 2 ]

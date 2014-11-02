@@ -7,14 +7,17 @@ define( function( require ){
         }
         this.create = function(){
                 game.physics.startSystem(Phaser.Physics.ARCADE);
-                game.stage.backgroundColor = '#000';      
-
+                game.stage.backgroundColor = '#000';                      
+                
                 gs.initKeys();
                 gs.initMap();
                 gs.initHints();
                 gs.initCheckpoints();
                 gs.initHero();
+                gs.initFader();
                 gs.initCameraSettings();        
+                
+                gs.fader.show();
             }
 
         this.update = function() {
