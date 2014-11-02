@@ -63,7 +63,7 @@ define( function( require ){
                             game
                             ,cpOptions[i].x
                             ,cpOptions[i].y - this.map.tileHeight
-                            ,i)                            
+                            ,parseInt(i))                            
                         );
                 }
                 
