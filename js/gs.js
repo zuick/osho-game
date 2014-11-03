@@ -77,7 +77,9 @@ define( function( require ){
                     this.hints.add( createHint( 
                             game
                             ,hintsOptions[i].x
-                            ,hintsOptions[i].y - this.map.tileHeight
+                            ,hintsOptions[i].y
+                            ,hintsOptions[i].width
+                            ,hintsOptions[i].height
                             ,hintsOptions[i].properties.key ) 
                         );
                 }                
