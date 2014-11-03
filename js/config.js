@@ -30,7 +30,7 @@ define( function(){
         }
         ,map: {
             tileTypes: {
-                collidable: [ 2 ]
+                collidable: [ 2, 11,12,13,14,15,16,17,18,19,20 ]
                 ,gate: [ 4 ]
                 ,run: [ 3 ]
                 ,climb: [ 5 ]
