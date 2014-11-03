@@ -53,6 +53,7 @@ define( function(){
         }
         ,hero: {
             mainSprite: "hero"
+            ,armsSprite: "hero-arms"
             ,position: { x: 180, y: 320 }
             ,size: { width: 24, height: 24 }
             ,spriteSize: { width: 32 ,height: 32 }
@@ -60,7 +61,7 @@ define( function(){
             ,bounce: 1
             ,climbingMaxDistance: 16
             ,stepLength: 2
-            ,airMax: 200
+            ,airMax: 1200
             ,airUpdateFrequency: 100
             ,airRecoverySpeed: 100
             ,airConsumptionSpeed: 15

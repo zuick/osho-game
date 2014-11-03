@@ -111,6 +111,7 @@ define( function( require ){
             }        
             ,updateCollides: function(){
                 game.physics.arcade.collide( this.hero.man, this.layers.static );
+                game.physics.arcade.collide( this.hero.arms, this.layers.static );
                 
                 this.processHintCollision();   
                 this.processCheckpointCollision()

@@ -6,13 +6,26 @@ define( function( require ){
         
         var hero = {};
         
-        hero.group = game.add.group();        
+        hero.group = game.add.group();
+        hero.arms = hero.group.create( x, y, config.armsSprite );
+        hero.arms.animations.add('u-run', [0,1,0,2], 6, true)
+        hero.arms.animations.add('d-run', [3,4,3,5], 6, true)
+        hero.arms.animations.add('r-run', [6,7,6,8], 6, true)
+        hero.arms.animations.add('l-run', [9,10,9,11], 6, true)        
+        hero.arms.animations.add('u-cl', [12,13,14,13], 6, true)
+        hero.arms.animations.add('d-cl', [15,16,17,16], 6, true)
+        hero.arms.animations.add('r-cl', [18,19,20,19], 6, true)
+        hero.arms.animations.add('l-cl', [21,22,23,22], 6, true)        
+        
         hero.man = hero.group.create( x, y, config.mainSprite );        
         
         game.physics.enable( hero.man );        
+        game.physics.enable( hero.arms );        
         hero.man.body.linearDamping = config.linearDamping;        
         hero.man.anchor.setTo(0.5, 0.5);
-        hero.man.body.setSize( config.size.width, config.size.height )
+        hero.arms.anchor.setTo(0.5, 0.5);
+        hero.man.body.setSize( config.size.width, config.size.height )        
+        hero.arms.body.setSize( config.size.width, config.size.height )        
         
         hero.man.frame = 0;
         
@@ -113,12 +126,16 @@ define( function( require ){
         }
         
         hero.updateProperties = function( state ){            
-            if( state.isFlying || state.isGonaClimbing ){
-                this.man.body.bounce.x = config.bounce;
-                this.man.body.bounce.y = config.bounce;            
+            if( state.isFlying || state.isGonaClimbing ){  
+                hero.group.forEach( function( item ){
+                    item.body.bounce.x = config.bounce;
+                    item.body.bounce.y = config.bounce;
+                })
             }else{
-                this.man.body.bounce.x = 0;
-                this.man.body.bounce.y = 0;                
+                hero.group.forEach( function( item ){
+                    item.body.bounce.x = 0;
+                    item.body.bounce.y = 0;
+                })                
             }
         }
         
@@ -169,6 +186,90 @@ define( function( require ){
             }
         }
         
+        hero.updateArms = function( state, cursors, keys ){
+            if( this.man.frame === 0 ){
+                
+                if( state.isRunning ){
+                    if( !cursors.left.isDown ){
+                        this.arms.frame = 9;
+                        this.arms.animations.stop()
+                    }else{
+                        this.arms.play('l-run')
+                    }
+                                        
+                }else if( state.isFlying || state.isGonaClimbing ){
+                    this.arms.frame = 9;
+                }else if( state.isClimbing ){
+                    this.arms.play('l-cl')
+                }
+                
+                if( !state.isClimbing && keys.space.isDown ){
+                    this.arms.animations.stop()
+                    this.arms.frame = 21;
+                }
+            }else if( this.man.frame === 1 ){
+                
+                if( state.isRunning ){
+                    if( !cursors.right.isDown ){ 
+                        this.arms.frame = 6;
+                        this.arms.animations.stop() 
+                    }else{ 
+                        this.arms.play('r-run') 
+                    }
+                    
+                }else if( state.isFlying || state.isGonaClimbing ){
+                    this.arms.frame = 6;
+                }else if( state.isClimbing ){
+                    this.arms.play('r-cl')
+                }
+                
+                if( !state.isClimbing && keys.space.isDown ){
+                    this.arms.animations.stop()
+                    this.arms.frame = 18;
+                }
+            }else if( this.man.frame === 2 ){
+                
+                if( state.isRunning ){
+                    if( !cursors.up.isDown ){
+                        this.arms.frame = 0;
+                        this.arms.animations.stop()
+                    }else{
+                        this.arms.play('u-run')
+                    }
+                }else if( state.isFlying || state.isGonaClimbing ){
+                    this.arms.frame = 0;
+                }else if( state.isClimbing ){
+                    this.arms.play('u-cl')
+                }
+                
+                if( !state.isClimbing && keys.space.isDown ){
+                    this.arms.animations.stop()
+                    this.arms.frame = 12;
+                }
+            }else if( this.man.frame === 3 ){
+                
+                if( state.isRunning ){
+                    if( !cursors.down.isDown ){
+                        this.arms.frame = 3;
+                        this.arms.animations.stop()
+                    }else{
+                        this.arms.play('d-run')
+                    }
+                }else if( state.isFlying || state.isGonaClimbing ){
+                    this.arms.frame = 3;
+                }else if( state.isClimbing ){
+                    this.arms.play('d-cl')
+                }
+                
+                if( !state.isClimbing && keys.space.isDown ){
+                    this.arms.animations.stop()
+                    this.arms.frame = 15;
+                }                
+            }
+            
+            
+        }
+        
         hero.update = function( cursors, keys, tilesAroundChecker ){
             var tilesAround = tilesAroundChecker();
             
@@ -186,6 +287,9 @@ define( function( require ){
             this.updateProperties( state );
             this.updateTurn( state, tilesAround, cursors );
             this.updateAirContainer( state );
+            this.updateArms( state, cursors, keys );
+                
+            
         }
         return hero;
         
