@@ -21,6 +21,7 @@ define( function( require ){
             gs.hero.update( gs.cursors, gs.keys, gs.getTilesTypesAround.bind(gs) );
             gs.updateCollides();
             gs.updateStateBar();
+            gs.processStarsShift();
         }
 
         this.render = function(){

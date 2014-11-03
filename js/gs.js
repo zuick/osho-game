@@ -4,6 +4,7 @@ define( function( require ){
     var createHint = require('models/hint');    
     var createCheckpoint = require('models/checkpoint');    
     var createStateBar = require('models/state-bar');
+    var createStar = require('models/star');
     var gameSaver = require('utils/game-saver');    
     
     return function( game ){
@@ -17,6 +18,7 @@ define( function( require ){
             ,lastCheckpoint: 0
             ,checkpoints: null
             ,fader: null
+            ,stars: null
             ,initFader: function(){
                 this.fader = require('utils/fader')( game );
                 this.fader.init();
@@ -24,16 +26,20 @@ define( function( require ){
             ,initStateBar: function(){
                 this.stateBar = createStateBar( game );
             }
+            ,initStars: function(){
+                this.stars = game.add.group();
+                for( var i = 0; i < config.stars.count; i++ ){
+                    this.stars.add( createStar( game, game.world.randomX, game.world.randomY )  );
+                }
+            }
             ,initMap: function(){
                 this.map = game.add.tilemap('tilemap');
                 this.map.addTilesetImage('tiles', 'tiles');
 
                 this.layers.background = this.map.createLayer('background');
-                this.layers.static = this.map.createLayer('static');                      
-                
                 this.layers.background.resizeWorld();
-                this.layers.background.scrollFactorX = 0.5;
-                this.layers.background.scrollFactory = 0.5;
+                this.initStars();
+                this.layers.static = this.map.createLayer('static');                      
 
                 this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 
@@ -136,6 +142,12 @@ define( function( require ){
                 }.bind(this))
                 
                 if( nohits ) this.messager.close();
+            }
+            ,processStarsShift: function(){
+                this.stars.forEach( function( star ){
+                    star.x = star.offset.x * ( 1 - ( star.scrollFactor * game.camera.view.x / game.world.width ) )
+                    star.y = star.offset.y * ( 1 - ( star.scrollFactor * game.camera.view.y / game.world.height ) )
+                })
             }
         }
     }

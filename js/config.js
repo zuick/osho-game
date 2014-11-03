@@ -38,7 +38,19 @@ define( function(){
             }
             ,tileWidth: 32
             ,tileHeight: 32
-        }        
+        }      
+        ,stars: {
+            sprite: "stars"
+            ,spriteSize: { width: 5 ,height: 5 }
+            ,spritesCount: 5
+            ,count: 3000
+            ,animationType: Phaser.Easing.Linear.None
+            ,animationTime: 500
+            ,animationDelay: 4000
+            ,maxScrollFactor: 0.15
+            ,maxScrollFactorAlpha: 3
+            ,tweenFrequency: 70
+        }
         ,hero: {
             mainSprite: "hero"
             ,position: { x: 180, y: 320 }
@@ -48,7 +60,7 @@ define( function(){
             ,bounce: 1
             ,climbingMaxDistance: 16
             ,stepLength: 2
-            ,airMax: 100
+            ,airMax: 200
             ,airUpdateFrequency: 100
             ,airRecoverySpeed: 100
             ,airConsumptionSpeed: 15
