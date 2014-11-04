@@ -30,10 +30,10 @@ define( function(){
         }
         ,map: {
             tileTypes: {
-                collidable: [ 2, 11,12,13,14,15,16,17,18,19,20 ]
-                ,gate: [ 4 ]
-                ,run: [ 3 ]
-                ,climb: [ 5 ]
+                collidable: [ 2,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30 ]
+                ,gate: [ 4, 45,46 ]
+                ,run: [ 3, 41,42,43,44 ]
+                ,climb: [ 5, 9 ]
                 ,flight: [ 1, -1 ]                
             }
             ,tileWidth: 32

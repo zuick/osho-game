@@ -90,6 +90,23 @@ define( function( require ){
             }
 
             return result;
+        }
+        
+        ,replaceTiles: function ( map, layerName, from, to ){            
+            // find layer
+            for( var i in map.layers ){
+                var layer = map.layers[i];
+                if( layer.name == layerName ){
+                    for( var k in layer.data ){
+                        for( var l in layer.data[k] ){
+                            if( layer.data[k][l] && layer.data[k][l].index == from ){
+                                layer.data[k][l].index = to;
+                            }         
+                        }
+                    }
+                    break;
+                }
+            }
         },
     }
 })

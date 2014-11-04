@@ -39,7 +39,11 @@ define( function( require ){
                 this.layers.background = this.map.createLayer('background');
                 this.layers.background.resizeWorld();
                 this.initStars();
+                this.layers.wayside = this.map.createLayer('wayside');
+                this.layers.wayside.scrollFactorX = 0.8;
+                this.layers.wayside.scrollFactorY = 0.8;
                 this.layers.static = this.map.createLayer('static');                      
+                mapTools.replaceTiles( this.map, 'static', 5, 9)     
 
                 this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 
@@ -148,8 +152,8 @@ define( function( require ){
             }
             ,processStarsShift: function(){
                 this.stars.forEach( function( star ){
-                    star.x = star.offset.x * ( 1 - ( star.scrollFactor * game.camera.view.x / game.world.width ) )
-                    star.y = star.offset.y * ( 1 - ( star.scrollFactor * game.camera.view.y / game.world.height ) )
+                    star.x = game.world.width - star.offset.x * ( 1 - ( star.scrollFactor * game.camera.view.x / game.world.width ) )
+                    star.y = game.world.height - star.offset.y * ( 1 - ( star.scrollFactor * game.camera.view.y / game.world.height ) )
                 })
             }
         }
