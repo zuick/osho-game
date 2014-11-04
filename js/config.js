@@ -1,6 +1,6 @@
 define( function(){
     return {
-        debug: true
+        debug: false
         ,game: {
             width: 800
             ,height: 600
