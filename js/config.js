@@ -61,14 +61,14 @@ define( function(){
             ,bounce: 1
             ,climbingMaxDistance: 16
             ,stepLength: 2
-            ,airMax: 300
+            ,airMax: 200
             ,airUpdateFrequency: 100
-            ,airRecoverySpeed: 100
+            ,airRecoverySpeed: 120
             ,airConsumptionSpeed: 15
             ,velocity: {
-                1: 100
-                ,2: 135
-                ,3: 60
+                1: 110
+                ,2: 145
+                ,3: 70
             }
             ,states: {
                 run: 1
