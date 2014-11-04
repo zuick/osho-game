@@ -12,6 +12,7 @@ define( function( require ){
             game.load.image('bar-air-bg', 'assets/bar-air-bg.png');
             game.load.image('bar-air-left-bg', 'assets/bar-air-left-bg.png');
             game.load.image('ship', 'assets/save-ship.png');
+            game.load.image('ship-bad', 'assets/save-ship-bad.png');
             game.load.spritesheet('hero', 'assets/hero.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 4 );
             game.load.spritesheet('hero-arms', 'assets/hero-run-arms.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 24 );
             game.load.spritesheet('stars', 'assets/stars.png', config.stars.spriteSize.width, config.stars.spriteSize.height, config.stars.spritesCount );

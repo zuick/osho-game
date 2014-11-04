@@ -44,7 +44,7 @@ define( function( require ){
                 this.layers.wayside.scrollFactorX = 0.8;
                 this.layers.wayside.scrollFactorY = 0.8;
                 this.layers.static = this.map.createLayer('static');                      
-                mapTools.replaceTiles( this.map, 'static', 5, 9)     
+                mapTools.replaceTiles( this.map, 'static', 5, 60)     
 
                 this.map.setCollision( config.map.tileTypes.collidable, true, this.layers.static );
                 
@@ -93,7 +93,9 @@ define( function( require ){
                 this.ships = game.add.group();
                 var shipsOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'ship');
                 for( var i in shipsOptions ){
-                    var ship = this.ships.create( shipsOptions[i].x, shipsOptions[i].y, 'ship')
+                    var sprite = ( shipsOptions[i].properties.state === 'normal' ) ? 'ship' : 'ship-bad';
+                    
+                    var ship = this.ships.create( shipsOptions[i].x, shipsOptions[i].y, sprite )
                     ship.isWorking = shipsOptions[i].properties.state === 'normal';
                     game.physics.arcade.enable( ship )
                     ship.body.immovable = true;
