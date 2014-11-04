@@ -19,9 +19,10 @@ define( function( require ){
             ,checkpoints: null
             ,fader: null
             ,stars: null
+            ,ships: null
+            ,gameEnd: false
             ,initFader: function(){
                 this.fader = require('utils/fader')( game );
-                this.fader.init();
             }
             ,initStateBar: function(){
                 this.stateBar = createStateBar( game );
@@ -88,6 +89,16 @@ define( function( require ){
                         );
                 }                
             }
+            ,initShips: function(){                
+                this.ships = game.add.group();
+                var shipsOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'ship');
+                for( var i in shipsOptions ){
+                    var ship = this.ships.create( shipsOptions[i].x, shipsOptions[i].y, 'ship')
+                    ship.isWorking = shipsOptions[i].properties.state === 'normal';
+                    game.physics.arcade.enable( ship )
+                    ship.body.immovable = true;
+                }                
+            }
             ,initCheckpoints: function(){
                 this.checkpoints = game.add.group();
                 var cpOptions = mapTools.getObjects( game.cache.getTilemapData('tilemap').data, 'objects', 'checkpoint');
@@ -110,6 +121,12 @@ define( function( require ){
                     space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
                 }
             }
+            ,onShipCollide: function( hero, ship ){
+                if( ship.isWorking && !this.gameEnd ){
+                    this.gameEnd = true;
+                    this.fader.show( function(){ game.state.start('outro') } );
+                }
+            }
             ,getTilesTypesAround: function( x, y ){
                 x = x || this.hero.man.x;
                 y = y || this.hero.man.y;
@@ -118,6 +135,8 @@ define( function( require ){
             ,updateCollides: function(){
                 game.physics.arcade.collide( this.hero.man, this.layers.static );
                 game.physics.arcade.collide( this.hero.arms, this.layers.static );
+                game.physics.arcade.collide( this.hero.man, this.ships, this.onShipCollide, null, this );
+                game.physics.arcade.collide( this.hero.arms, this.ships );
                 
                 this.processHintCollision();   
                 this.processCheckpointCollision()

@@ -11,7 +11,9 @@ define( function( require ){
             gs.initMap();
             gs.initHints();
             gs.initCheckpoints();
-            gs.initHero();            
+            gs.initShips();
+            gs.initHero();   
+            gs.initFader();
             gs.initStateBar();
             gs.initCameraSettings();            
         }

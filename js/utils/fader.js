@@ -3,14 +3,12 @@ define( function(){
     
     return function( game ){
         return {
-            init: function(){
+            show: function( onComplete ){
                 this.fader = game.add.tileSprite( 0, 0, config.game.width, config.game.height, config.fader.sprite );
-                this.fader.alpha = 1;
+                this.fader.alpha = 0;
                 this.fader.fixedToCamera = true;
-                
-            },
-            show: function(){
-                var tween = game.add.tween( this.fader ).to( { alpha: 0 }, config.fader.animationTime, config.fader.animationType, true, 0, 0, false );                
+                var tween = game.add.tween( this.fader ).to( { alpha: 1 }, config.fader.animationTime, config.fader.animationType, true, 0, 0, false ); 
+                if( typeof onComplete === "function" ) tween.onComplete.add( onComplete );
             }
         }
         
