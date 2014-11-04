@@ -30,9 +30,9 @@ define( function(){
         }
         ,map: {
             tileTypes: {
-                collidable: [ 2,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30 ]
+                collidable: [ 2,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,47 ]
                 ,gate: [ 4, 45,46 ]
-                ,run: [ 3, 41,42,43,44 ]
+                ,run: [ 3, 41,42,43,44,48,49,50,51,52,53,54,55,56,57,58,59,60 ]
                 ,climb: [ 5, 9 ]
                 ,flight: [ 1, -1 ]                
             }
@@ -61,7 +61,7 @@ define( function(){
             ,bounce: 1
             ,climbingMaxDistance: 16
             ,stepLength: 2
-            ,airMax: 1200
+            ,airMax: 300
             ,airUpdateFrequency: 100
             ,airRecoverySpeed: 100
             ,airConsumptionSpeed: 15
@@ -83,7 +83,7 @@ define( function(){
             height: 60
             ,bgTile: 'message'
             ,textStyle: { font: '12pt Verdana'
-                        ,fill: '#19cb65'
+                        ,fill: '#1da8ab'
                         ,stroke: '#000'
                         ,strokeThickness: 0
                         ,xOffset: 20
