@@ -17,12 +17,10 @@ define( function( require ){
             game.load.spritesheet('hero-arms', 'assets/hero-run-arms.png', config.hero.spriteSize.width, config.hero.spriteSize.height, 24 );
             game.load.spritesheet('stars', 'assets/stars.png', config.stars.spriteSize.width, config.stars.spriteSize.height, config.stars.spritesCount );
             game.load.image('hint', 'assets/hint.png');
-            game.load.image('checkpoint', 'assets/terminal.png');
-            game.load.image('logo', 'assets/gaminator-logo.jpg');
+            game.load.image('checkpoint', 'assets/terminal.png');            
         } 
         this.create = function(){
-            if( config.debug ) game.state.start( 'game' );
-            else game.state.start( 'bumper' );
+            game.state.start( 'game' );
         }            
     }
 })
